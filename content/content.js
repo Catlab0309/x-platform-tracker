@@ -16,7 +16,7 @@ function getTweetId(tweetElement) {
 function setupEventDelegation() {
   console.log('[X Tracker] Setting up event delegation');
   document.addEventListener('click', (e) => {
-    console.log('[X Tracker] Click detected on:', e.target.tagName, e.target.className?.substring(0, 30));
+    console.log('[X Tracker] Click detected on:', e.target.tagName, String(e.target.className).substring(0, 30));
     const tweetElement = e.target.closest('[data-testid="tweet"]');
     console.log('[X Tracker] Tweet element found:', !!tweetElement);
 
