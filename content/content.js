@@ -14,8 +14,12 @@ function getTweetId(tweetElement) {
 
 // 监控页面变化，为新添加的推文绑定事件
 function setupEventDelegation() {
+  console.log('[X Tracker] Setting up event delegation');
   document.addEventListener('click', (e) => {
+    console.log('[X Tracker] Click detected on:', e.target.tagName, e.target.className?.substring(0, 30));
     const tweetElement = e.target.closest('[data-testid="tweet"]');
+    console.log('[X Tracker] Tweet element found:', !!tweetElement);
+
     if (!tweetElement) return;
 
     const tweetId = getTweetId(tweetElement);
@@ -23,6 +27,8 @@ function setupEventDelegation() {
 
     const likeButton = e.target.closest('[data-testid="like"], [data-testid="unlike"]');
     const retweetButton = e.target.closest('[data-testid="retweet"]');
+
+    console.log('[X Tracker] Like button:', !!likeButton, 'Retweet button:', !!retweetButton);
 
     if (likeButton) {
       console.log('[X Tracker] Like/Unlike button clicked, tweetId:', tweetId);
@@ -67,7 +73,7 @@ function setupEventDelegation() {
         }
       });
     }
-  });
+  }, true);
 }
 
 // 初始化
