@@ -8,10 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 加载统计数据
 function loadStats() {
+  console.log('[X Tracker Popup] loadStats called');
   chrome.storage.local.get(['dailyStats'], (result) => {
+    console.log('[X Tracker Popup] Storage result:', result);
     const dailyStats = result.dailyStats || {};
     const today = new Date().toISOString().split('T')[0];
+    console.log('[X Tracker Popup] Today date:', today);
     const todayStats = dailyStats[today] || { likes: 0, replies: 0, retweets: 0, posts: 0 };
+    console.log('[X Tracker Popup] Today stats:', todayStats);
 
     document.getElementById('today-likes').textContent = todayStats.likes;
     document.getElementById('today-replies').textContent = todayStats.replies;

@@ -13,6 +13,7 @@ function setupEventDelegation() {
     const retweetButton = e.target.closest('[data-testid="retweet"]');
 
     if (likeButton) {
+      console.log('[X Tracker] Like button clicked, tweetId:', tweetId);
       const activity = {
         id: Date.now().toString(),
         type: 'like',
@@ -21,8 +22,15 @@ function setupEventDelegation() {
         timestamp: Date.now(),
         url: `https://x.com/i/web/status/${tweetId}`
       };
-      chrome.runtime.sendMessage({ type: 'LOG_ACTIVITY', activity });
+      console.log('[X Tracker] Sending activity:', activity);
+      chrome.runtime.sendMessage({ type: 'LOG_ACTIVITY', activity }, (response) => {
+        console.log('[X Tracker] Response from background:', response);
+        if (chrome.runtime.lastError) {
+          console.error('[X Tracker] Error sending message:', chrome.runtime.lastError);
+        }
+      });
     } else if (retweetButton) {
+      console.log('[X Tracker] Retweet button clicked, tweetId:', tweetId);
       const activity = {
         id: Date.now().toString(),
         type: 'retweet',
@@ -31,7 +39,13 @@ function setupEventDelegation() {
         timestamp: Date.now(),
         url: `https://x.com/i/web/status/${tweetId}`
       };
-      chrome.runtime.sendMessage({ type: 'LOG_ACTIVITY', activity });
+      console.log('[X Tracker] Sending activity:', activity);
+      chrome.runtime.sendMessage({ type: 'LOG_ACTIVITY', activity }, (response) => {
+        console.log('[X Tracker] Response from background:', response);
+        if (chrome.runtime.lastError) {
+          console.error('[X Tracker] Error sending message:', chrome.runtime.lastError);
+        }
+      });
     }
   });
 }
