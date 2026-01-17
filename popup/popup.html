@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X平台数据追踪器</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>X平台数据追踪器</h1>
+    </header>
+
+    <section class="today-stats">
+      <h2>今日统计</h2>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">点赞</div>
+          <div class="stat-value" id="today-likes">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">评论</div>
+          <div class="stat-value" id="today-replies">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">转发</div>
+          <div class="stat-value" id="today-retweets">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">发帖</div>
+          <div class="stat-value" id="today-posts">0</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="recent-activity">
+      <h2>最近活动</h2>
+      <ul id="activity-list"></ul>
+    </section>
+
+    <footer>
+      <button id="clear-data">清空数据</button>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
