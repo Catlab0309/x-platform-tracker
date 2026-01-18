@@ -2,9 +2,23 @@
 
 // 页面加载时获取数据
 document.addEventListener('DOMContentLoaded', () => {
+  loadCurrentDate();
   loadStats();
   loadRecentActivities();
 });
+
+// 加载当前日期
+function loadCurrentDate() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  const weekDay = weekDays[now.getDay()];
+  
+  const dateStr = `${year}年${month}月${day}日 ${weekDay}`;
+  document.getElementById('current-date').textContent = dateStr;
+}
 
 // 加载统计数据
 function loadStats() {
@@ -51,7 +65,7 @@ function loadRecentActivities() {
           typeText = '点赞了';
           break;
         case 'reply':
-          typeText = '回复了';
+          typeText = '评论了';
           break;
         case 'retweet':
           typeText = '转发了';
@@ -61,8 +75,12 @@ function loadRecentActivities() {
           break;
       }
 
+      const contentDisplay = activity.content.length > 100
+        ? activity.content.substring(0, 100) + '...'
+        : activity.content;
+
       li.innerHTML = `
-        <div>${typeText}: ${activity.content.substring(0, 50)}...</div>
+        <div>${typeText}: ${contentDisplay}</div>
         <div class="activity-time">${timeStr}</div>
       `;
 

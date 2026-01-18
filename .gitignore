@@ -10,3 +10,11 @@ Thumbs.db
 
 # Node modules (如果后续添加)
 node_modules/
+
+# 调试脚本
+*-diagnostic.js
+*-debugger.js
+*-finder.js
+*-guide.js
+*-test.js
+version-test.js
