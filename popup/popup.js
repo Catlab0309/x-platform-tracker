@@ -196,12 +196,15 @@ function loadActivityChart() {
   chrome.storage.local.get(['dailyStats'], (result) => {
     console.log('[X Tracker Popup] Chart storage result:', result);
     const dailyStats = result.dailyStats || {};
-    
+
     // 生成最近7天的日期
     const dates = [];
     const labels = [];
-    const data = [];
-    
+    const likesData = [];
+    const repliesData = [];
+    const retweetsData = [];
+    const postsData = [];
+
     for (let i = 6; i >= 0; i--) {
       const date = new Date();
       date.setDate(date.getDate() - i);
@@ -212,20 +215,22 @@ function loadActivityChart() {
       const dateStr = `${year}-${month}-${day}`;
       dates.push(dateStr);
       labels.push(`${date.getMonth() + 1}/${date.getDate()}`);
-      
+
       // 获取当天的统计数据，如果没有则使用默认值
       const stats = dailyStats[dateStr] || { likes: 0, replies: 0, retweets: 0, posts: 0 };
-      const total = stats.likes + stats.replies + stats.retweets + stats.posts;
-      data.push(total);
-      console.log(`[X Tracker Popup] Date ${dateStr}: ${total} activities`);
+      likesData.push(stats.likes);
+      repliesData.push(stats.replies);
+      retweetsData.push(stats.retweets);
+      postsData.push(stats.posts);
+      console.log(`[X Tracker Popup] Date ${dateStr}: likes=${stats.likes}, replies=${stats.replies}, retweets=${stats.retweets}, posts=${stats.posts}`);
     }
-    
-    console.log('[X Tracker Popup] Chart data:', { dates, labels, data });
-    
+
+    console.log('[X Tracker Popup] Chart data:', { dates, labels, likesData, repliesData, retweetsData, postsData });
+
     // 渲染图表
     const ctx = document.getElementById('activity-chart').getContext('2d');
     console.log('[X Tracker Popup] Canvas element found:', !!ctx);
-    
+
     // 如果图表已存在，先销毁
     if (window.activityChartInstance) {
       window.activityChartInstance.destroy();
@@ -235,27 +240,85 @@ function loadActivityChart() {
       type: 'line',
       data: {
         labels: labels,
-        datasets: [{
-          label: '活动数量',
-          data: data,
-          borderColor: '#667eea',
-          backgroundColor: 'rgba(102, 126, 234, 0.1)',
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: '#667eea',
-          pointBorderColor: '#ffffff',
-          pointBorderWidth: 2,
-          pointRadius: 4,
-          pointHoverRadius: 6
-        }]
+        datasets: [
+          {
+            label: '点赞',
+            data: likesData,
+            borderColor: '#ff6b6b',
+            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+            borderWidth: 2,
+            fill: false,
+            tension: 0.4,
+            pointBackgroundColor: '#ff6b6b',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          },
+          {
+            label: '评论',
+            data: repliesData,
+            borderColor: '#4facfe',
+            backgroundColor: 'rgba(79, 172, 254, 0.1)',
+            borderWidth: 2,
+            fill: false,
+            tension: 0.4,
+            pointBackgroundColor: '#4facfe',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          },
+          {
+            label: '转发',
+            data: retweetsData,
+            borderColor: '#43e97b',
+            backgroundColor: 'rgba(67, 233, 123, 0.1)',
+            borderWidth: 2,
+            fill: false,
+            tension: 0.4,
+            pointBackgroundColor: '#43e97b',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          },
+          {
+            label: '发帖',
+            data: postsData,
+            borderColor: '#fa709a',
+            backgroundColor: 'rgba(250, 112, 154, 0.1)',
+            borderWidth: 2,
+            fill: false,
+            tension: 0.4,
+            pointBackgroundColor: '#fa709a',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }
+        ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: false
+            display: true,
+            position: 'top',
+            align: 'end',
+            labels: {
+              boxWidth: 12,
+              boxHeight: 12,
+              padding: 15,
+              font: {
+                size: 11,
+                weight: 500
+              },
+              color: '#536471',
+              usePointStyle: true,
+              pointStyle: 'circle'
+            }
           },
           tooltip: {
             enabled: true,
@@ -268,19 +331,12 @@ function loadActivityChart() {
             padding: 12,
             callbacks: {
               label: function(context) {
-                const index = context.dataIndex;
-                const dateStr = dates[index];
-                const stats = dailyStats[dateStr] || { likes: 0, replies: 0, retweets: 0, posts: 0 };
-                const total = context.raw;
-                
-                let tooltipText = `总计: ${total} 次\n`;
-                tooltipText += `  点赞: ${stats.likes}`;
-                tooltipText += `\n  评论: ${stats.replies}`;
-                tooltipText += `\n  转发: ${stats.retweets}`;
-                tooltipText += `\n  发帖: ${stats.posts}`;
-                
-                return tooltipText;
+                const datasetLabel = context.dataset.label || '';
+                const value = context.parsed.y;
+                return `${datasetLabel}: ${value} 次`;
               }
+            }
+          }
             }
           }
         },
