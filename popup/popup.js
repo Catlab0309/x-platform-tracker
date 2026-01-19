@@ -90,6 +90,80 @@ function loadRecentActivities() {
   });
 }
 
+// 导出数据
+document.getElementById('export-data').addEventListener('click', () => {
+  chrome.storage.local.get(['activities', 'dailyStats'], (result) => {
+    const data = {
+      exportDate: new Date().toISOString(),
+      activities: result.activities || [],
+      dailyStats: result.dailyStats || {}
+    };
+    
+    const dataStr = JSON.stringify(data, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    
+    const date = new Date().toISOString().split('T')[0];
+    const filename = `x-tracker-backup-${date}.json`;
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    
+    URL.revokeObjectURL(url);
+  });
+});
+
+// 导入数据
+document.getElementById('import-data').addEventListener('click', () => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  
+  input.onchange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        
+        if (!data.activities || !data.dailyStats) {
+          alert('无效的数据文件格式');
+          return;
+        }
+        
+        if (confirm(`确定要导入 ${data.activities.length} 条活动记录吗？这将合并到现有数据中。`)) {
+          chrome.storage.local.get(['activities', 'dailyStats'], (result) => {
+            const existingActivities = result.activities || [];
+            const existingDailyStats = result.dailyStats || {};
+            
+            const newActivities = [...existingActivities, ...data.activities];
+            const newDailyStats = { ...existingDailyStats, ...data.dailyStats };
+            
+            chrome.storage.local.set({ 
+              activities: newActivities,
+              dailyStats: newDailyStats
+            }, () => {
+              loadStats();
+              loadRecentActivities();
+              loadActivityChart();
+              alert('数据导入成功！');
+            });
+          });
+        }
+      } catch (error) {
+        alert('无法解析文件：' + error.message);
+      }
+    };
+    reader.readAsText(file);
+  };
+  
+  input.click();
+});
+
 // 清空数据
 document.getElementById('clear-data').addEventListener('click', () => {
   if (confirm('确定要清空所有数据吗？')) {

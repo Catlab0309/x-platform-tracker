@@ -192,6 +192,35 @@ footer {
   border-top: 1px solid #eff3f4;
 }
 
+.footer-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.footer-buttons button {
+  flex: 1;
+  background: #1d9bf0;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(29, 155, 240, 0.3);
+}
+
+.footer-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(29, 155, 240, 0.4);
+}
+
+.footer-buttons button:active {
+  transform: translateY(0);
+}
+
 #clear-data {
   width: 100%;
   background: #f4212e;
