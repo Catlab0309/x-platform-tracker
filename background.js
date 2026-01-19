@@ -17,14 +17,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('[X Tracker Background] Received message:', message);
   if (message.type === 'LOG_ACTIVITY') {
     console.log('[X Tracker Background] Processing activity:', message.activity);
-    handleActivityLog(message.activity);
-    sendResponse({ success: true });
+    handleActivityLog(message.activity, sendResponse);
+    return true; // 保持消息通道开启以支持异步响应
   }
-  return true;
 });
 
 // 处理活动日志
-function handleActivityLog(activity) {
+function handleActivityLog(activity, sendResponse) {
   console.log('[X Tracker Background] handleActivityLog called with:', activity);
   chrome.storage.local.get(['activities', 'dailyStats'], (result) => {
     console.log('[X Tracker Background] Current storage data:', result);
@@ -72,6 +71,9 @@ function handleActivityLog(activity) {
       console.log('[X Tracker Background] Data saved successfully');
       if (chrome.runtime.lastError) {
         console.error('[X Tracker Background] Error saving data:', chrome.runtime.lastError);
+        sendResponse({ success: false, error: chrome.runtime.lastError });
+      } else {
+        sendResponse({ success: true });
       }
     });
   });
