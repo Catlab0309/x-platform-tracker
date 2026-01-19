@@ -337,8 +337,6 @@ function loadActivityChart() {
               }
             }
           }
-            }
-          }
         },
         scales: {
           x: {
