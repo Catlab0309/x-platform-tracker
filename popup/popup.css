@@ -176,6 +176,16 @@ section h2 {
   font-weight: 400;
 }
 
+.chart-container {
+  position: relative;
+  height: 200px;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #eff3f4;
+  border-radius: 12px;
+  padding: 12px;
+}
+
 footer {
   padding: 20px;
   background: #f7f9f9;

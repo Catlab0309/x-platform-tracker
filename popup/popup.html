@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>X平台数据追踪器</title>
   <link rel="stylesheet" href="popup.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -66,7 +67,14 @@
         </div>
       </div>
     </section>
- 
+  
+    <section class="activity-chart">
+      <h2>近7天活动趋势</h2>
+      <div class="chart-container">
+        <canvas id="activity-chart"></canvas>
+      </div>
+    </section>
+  
     <section class="recent-activity">
       <h2>最近活动</h2>
       <ul id="activity-list"></ul>
