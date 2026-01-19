@@ -2,6 +2,7 @@
 
 // 页面加载时获取数据
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('[X Tracker Popup] DOMContentLoaded');
   loadCurrentDate();
   loadStats();
   loadRecentActivities();
@@ -27,6 +28,7 @@ function loadStats() {
   chrome.storage.local.get(['dailyStats'], (result) => {
     console.log('[X Tracker Popup] Storage result:', result);
     const dailyStats = result.dailyStats || {};
+    console.log('[X Tracker Popup] All dailyStats keys:', Object.keys(dailyStats));
     
     // 使用本地时间获取今天的日期
     const now = new Date();
@@ -190,7 +192,9 @@ document.getElementById('clear-data').addEventListener('click', () => {
 
 // 加载活动趋势图表
 function loadActivityChart() {
+  console.log('[X Tracker Popup] loadActivityChart called');
   chrome.storage.local.get(['dailyStats'], (result) => {
+    console.log('[X Tracker Popup] Chart storage result:', result);
     const dailyStats = result.dailyStats || {};
     
     // 生成最近7天的日期
@@ -213,10 +217,14 @@ function loadActivityChart() {
       const stats = dailyStats[dateStr] || { likes: 0, replies: 0, retweets: 0, posts: 0 };
       const total = stats.likes + stats.replies + stats.retweets + stats.posts;
       data.push(total);
+      console.log(`[X Tracker Popup] Date ${dateStr}: ${total} activities`);
     }
+    
+    console.log('[X Tracker Popup] Chart data:', { dates, labels, data });
     
     // 渲染图表
     const ctx = document.getElementById('activity-chart').getContext('2d');
+    console.log('[X Tracker Popup] Canvas element found:', !!ctx);
     
     // 如果图表已存在，先销毁
     if (window.activityChartInstance) {
