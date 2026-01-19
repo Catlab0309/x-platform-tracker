@@ -35,8 +35,12 @@ function handleActivityLog(activity) {
     activities.push(activity);
     console.log('[X Tracker Background] Activities after push:', activities.length);
 
-    // 更新每日统计
-    const date = new Date().toISOString().split('T')[0];
+    // 更新每日统计（使用本地时间）
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const date = `${year}-${month}-${day}`;
     console.log('[X Tracker Background] Date:', date);
 
     if (!dailyStats[date]) {

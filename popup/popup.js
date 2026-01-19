@@ -27,7 +27,14 @@ function loadStats() {
   chrome.storage.local.get(['dailyStats'], (result) => {
     console.log('[X Tracker Popup] Storage result:', result);
     const dailyStats = result.dailyStats || {};
-    const today = new Date().toISOString().split('T')[0];
+    
+    // 使用本地时间获取今天的日期
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const today = `${year}-${month}-${day}`;
+    
     console.log('[X Tracker Popup] Today date:', today);
     const todayStats = dailyStats[today] || { likes: 0, replies: 0, retweets: 0, posts: 0 };
     console.log('[X Tracker Popup] Today stats:', todayStats);
@@ -103,7 +110,12 @@ document.getElementById('export-data').addEventListener('click', () => {
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
     
-    const date = new Date().toISOString().split('T')[0];
+    // 使用本地时间作为文件名
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const date = `${year}-${month}-${day}`;
     const filename = `x-tracker-backup-${date}.json`;
     
     const link = document.createElement('a');
@@ -189,7 +201,11 @@ function loadActivityChart() {
     for (let i = 6; i >= 0; i--) {
       const date = new Date();
       date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
+      // 使用本地时间格式化日期
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
       dates.push(dateStr);
       labels.push(`${date.getMonth() + 1}/${date.getDate()}`);
       
