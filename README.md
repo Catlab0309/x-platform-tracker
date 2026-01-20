@@ -18,6 +18,8 @@
 - ✅ **日期显示**：显示当前日期和星期
 
 ## 截图
+<img width="402" height="600" alt="截屏2026-01-20 19 29 44" src="https://github.com/user-attachments/assets/23143594-976c-405e-a687-8051bf394667" />
+
 
 ![UI预览](screenshots/ui-preview.png)
 
